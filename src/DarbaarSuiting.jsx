@@ -279,8 +279,8 @@ function Navbar({ page, setPage, cartCount, isAdmin, setIsAdmin, user, setUser }
           <button key={k} onClick={() => setPage(k)} style={{
             background:"none", border:"none", cursor:"pointer", padding:"4px 0",
             fontFamily:"'Cinzel',serif",
-            fontSize:10,
-            fontWeight:600,
+            fontSize:18,
+            fontWeight:"bolder",
             letterSpacing:"0.25em",
             color: page===k ? T.gold : T.greige,
             borderBottom: page===k ? `1px solid ${T.gold}` : "1px solid transparent",
