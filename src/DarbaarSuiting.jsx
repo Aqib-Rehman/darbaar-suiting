@@ -47,7 +47,7 @@ globalStyle.textContent = `
 
   .nav-link {
     background: none; border: none; cursor: pointer; padding: 4px 0;
-    font-family: 'Cinzel', serif; font-size: 10px; font-weight: 600;
+    font-family: 'Cinzel', serif; font-size: 17px; font-weight: bolder;
     letter-spacing: 0.25em; border-bottom: 1px solid transparent;
     transition: color .25s, font-style .25s, letter-spacing .25s;
   }
@@ -266,7 +266,7 @@ function Navbar({ page, setPage, cartCount, isAdmin, setIsAdmin, user, setUser }
         <div style={{ lineHeight:1 }}>
           <div style={{
             fontFamily:"'Cinzel',serif",
-            fontSize:17,
+            fontSize:16,
             fontWeight:700,
             letterSpacing:"0.22em",
             color:T.cream,
@@ -391,7 +391,7 @@ function HomePage({ setPage, products }) {
             <div className="tag-gold" style={{ marginBottom:28 }}>EST. — PREMIUM UNSTITCHED SUITING</div>
           </div>
           <div className="fade-up" style={{ animationDelay:".25s" }}>
-            <LogoMark size={64} />
+            {/* <LogoMark size={64} /> */}
           </div>
           <div className="fade-up" style={{ animationDelay:".4s" }}>
             <h1 style={{
