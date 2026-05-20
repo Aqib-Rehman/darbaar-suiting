@@ -45,6 +45,15 @@ globalStyle.textContent = `
   @keyframes pulse    { 0%,100% { transform:scale(1); } 50% { transform:scale(1.04); } }
   @keyframes goldGlow { 0%,100% { box-shadow:0 0 12px ${T.gold}40; } 50% { box-shadow:0 0 28px ${T.gold}80; } }
 
+  .nav-link {
+    background: none; border: none; cursor: pointer; padding: 4px 0;
+    font-family: 'Cinzel', serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 0.25em; border-bottom: 1px solid transparent;
+    transition: color .25s, font-style .25s, letter-spacing .25s;
+  }
+  .nav-link:hover { color: ${T.goldLight} !important; font-style: italic; letter-spacing: 0.32em; }
+  .nav-link.active { color: ${T.gold} !important; border-bottom-color: ${T.gold}; }
+
   .fade-up   { animation: fadeUp .7s ease forwards; }
   .fade-in   { animation: fadeIn .5s ease forwards; }
   .shimmer   { animation: shimmer 2.4s ease infinite; }
@@ -276,16 +285,10 @@ function Navbar({ page, setPage, cartCount, isAdmin, setIsAdmin, user, setUser }
       {/* ── Nav Links ── */}
       <div style={{ display:"flex", gap:36, alignItems:"center" }}>
         {navLinks.map(([k,l]) => (
-          <button key={k} onClick={() => setPage(k)} style={{
-            background:"none", border:"none", cursor:"pointer", padding:"4px 0",
-            fontFamily:"'Cinzel',serif",
-            fontSize:18,
-            fontWeight:"bolder",
-            letterSpacing:"0.25em",
-            color: page===k ? T.gold : T.greige,
-            borderBottom: page===k ? `1px solid ${T.gold}` : "1px solid transparent",
-            transition:"color .25s, border-color .25s",
-          }}>{l}</button>
+          <button key={k} onClick={() => setPage(k)}
+            className={`nav-link${page===k ? " active" : ""}`}
+            style={{ color: page===k ? T.gold : T.greige }}
+          >{l}</button>
         ))}
       </div>
 
@@ -388,7 +391,7 @@ function HomePage({ setPage, products }) {
             <div className="tag-gold" style={{ marginBottom:28 }}>EST. — PREMIUM UNSTITCHED SUITING</div>
           </div>
           <div className="fade-up" style={{ animationDelay:".25s" }}>
-            {/* <LogoMark size={64} /> */}
+            <LogoMark size={64} />
           </div>
           <div className="fade-up" style={{ animationDelay:".4s" }}>
             <h1 style={{
