@@ -266,7 +266,7 @@ function Navbar({ page, setPage, cartCount, isAdmin, setIsAdmin, user, setUser }
         <div style={{ lineHeight:1 }}>
           <div style={{
             fontFamily:"'Cinzel',serif",
-            fontSize:16,
+            fontSize:17,
             fontWeight:700,
             letterSpacing:"0.22em",
             color:T.cream,
