@@ -388,7 +388,7 @@ function HomePage({ setPage, products }) {
             <div className="tag-gold" style={{ marginBottom:28 }}>EST. — PREMIUM UNSTITCHED SUITING</div>
           </div>
           <div className="fade-up" style={{ animationDelay:".25s" }}>
-            <LogoMark size={64} />
+            {/* <LogoMark size={64} /> */}
           </div>
           <div className="fade-up" style={{ animationDelay:".4s" }}>
             <h1 style={{
