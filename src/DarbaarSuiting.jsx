@@ -167,16 +167,27 @@ const fmt = (n) => `PKR ${Number(n).toLocaleString()}`;
 const uid = () => Math.random().toString(36).slice(2,9);
 
 // ─── Logo SVG (Arch + Needle) ────────────────────────────────
+// viewBox kept square so it never overflows its container
 function LogoMark({ size = 36 }) {
   return (
-    <svg width={size} height={size * 1.2} viewBox="0 0 60 72" fill="none">
-      <path d="M30 4 C14 4 8 18 8 30 L8 58 L30 58 L52 58 L52 30 C52 18 46 4 30 4Z"
-        fill="none" stroke={T.gold} strokeWidth="2.5" strokeLinejoin="round"/>
-      <path d="M20 58 L20 30 C20 22 24 16 30 14 C36 16 40 22 40 30 L40 58"
-        fill="none" stroke={T.gold} strokeWidth="1.2" opacity="0.5"/>
-      <line x1="30" y1="10" x2="30" y2="62" stroke={T.goldLight} strokeWidth="1.5"/>
-      <ellipse cx="30" cy="13" rx="3" ry="2" fill={T.gold}/>
-      <path d="M27 62 L30 68 L33 62" fill={T.gold}/>
+    <svg
+      width={size} height={size}
+      viewBox="0 0 60 60"
+      fill="none"
+      style={{ display:"block", flexShrink:0, overflow:"visible" }}
+    >
+      {/* Arch */}
+      <path d="M30 3 C16 3 9 16 9 27 L9 54 L51 54 L51 27 C51 16 44 3 30 3Z"
+        fill="none" stroke={T.gold} strokeWidth="2.2" strokeLinejoin="round"/>
+      {/* Inner arch hint */}
+      <path d="M21 54 L21 28 C21 21 25 15 30 13 C35 15 39 21 39 28 L39 54"
+        fill="none" stroke={T.gold} strokeWidth="1" opacity="0.45"/>
+      {/* Needle shaft */}
+      <line x1="30" y1="9" x2="30" y2="56" stroke={T.goldLight} strokeWidth="1.4"/>
+      {/* Needle eye */}
+      <ellipse cx="30" cy="12" rx="2.5" ry="1.8" fill={T.gold}/>
+      {/* Needle tip */}
+      <path d="M28 56 L30 60 L32 56" fill={T.gold}/>
     </svg>
   );
 }
@@ -213,62 +224,91 @@ function Toast({ msg, onClose }) {
 
 // ─── Navbar ───────────────────────────────────────────────────
 function Navbar({ page, setPage, cartCount, isAdmin, setIsAdmin, user, setUser }) {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const navLinks = isAdmin
+    ? [["home","HOME"],["shop","SHOP"],["women","WOMEN"],["admin","ADMIN"]]
+    : [["home","HOME"],["shop","SHOP"],["women","WOMEN"]];
+
   return (
     <nav style={{
       position:"fixed", top:0, left:0, right:0, zIndex:1000,
-      background:`linear-gradient(180deg, ${T.dark}F5 0%, ${T.dark}E0 100%)`,
-      backdropFilter:"blur(16px)",
-      borderBottom:`1px solid ${T.gold}25`,
-      padding:"0 40px", height:72,
+      background:`${T.navyDeep}F8`,
+      backdropFilter:"blur(20px)",
+      WebkitBackdropFilter:"blur(20px)",
+      borderBottom:`1px solid ${T.gold}30`,
+      padding:"0 48px",
+      height:68,
       display:"flex", alignItems:"center", justifyContent:"space-between",
+      boxShadow:`0 4px 32px ${T.dark}80`,
     }}>
-      {/* Logo */}
-      <div onClick={() => setPage("home")} style={{ display:"flex", alignItems:"center", gap:12, cursor:"pointer" }}>
-        <LogoMark size={32} />
-        <div>
-          <div style={{ fontFamily:"'Cinzel',serif", fontSize:18, letterSpacing:4, color:T.cream, lineHeight:1 }}>DARBAAR</div>
-          <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:11, color:T.gold, letterSpacing:3, fontStyle:"italic" }}>— Suiting —</div>
+
+      {/* ── Brand Logo ── */}
+      <div
+        onClick={() => setPage("home")}
+        style={{
+          display:"flex", alignItems:"center", gap:10,
+          cursor:"pointer", flexShrink:0,
+          overflow:"hidden",          // keeps SVG clipped to this container
+        }}
+      >
+        {/* SVG is strictly 40×40 — no bleed into navbar */}
+        <div style={{ width:40, height:40, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+          <LogoMark size={38} />
+        </div>
+        <div style={{ lineHeight:1 }}>
+          <div style={{
+            fontFamily:"'Cinzel',serif",
+            fontSize:16,
+            fontWeight:700,
+            letterSpacing:"0.22em",
+            color:T.cream,
+          }}>DARBAAR</div>
+          <div style={{
+            fontFamily:"'Cormorant Garamond',serif",
+            fontSize:10,
+            fontStyle:"italic",
+            letterSpacing:"0.25em",
+            color:T.gold,
+            marginTop:2,
+          }}>— Suiting —</div>
         </div>
       </div>
 
-      {/* Nav Links */}
-      <div style={{ display:"flex", gap:32, alignItems:"center" }}>
-        {[["home","HOME"],["shop","SHOP"],["women","WOMEN"]].map(([k,l]) => (
+      {/* ── Nav Links ── */}
+      <div style={{ display:"flex", gap:36, alignItems:"center" }}>
+        {navLinks.map(([k,l]) => (
           <button key={k} onClick={() => setPage(k)} style={{
-            background:"none", border:"none", cursor:"pointer",
-            fontFamily:"'Cinzel',serif", fontSize:11, letterSpacing:3,
-            color: page===k ? T.gold : T.muted,
-            transition:"color .3s",
+            background:"none", border:"none", cursor:"pointer", padding:"4px 0",
+            fontFamily:"'Cinzel',serif",
+            fontSize:10,
+            fontWeight:600,
+            letterSpacing:"0.25em",
+            color: page===k ? T.gold : T.greige,
             borderBottom: page===k ? `1px solid ${T.gold}` : "1px solid transparent",
-            paddingBottom:2,
+            transition:"color .25s, border-color .25s",
           }}>{l}</button>
         ))}
-        {isAdmin && (
-          <button onClick={() => setPage("admin")} style={{
-            background:"none", border:"none", cursor:"pointer",
-            fontFamily:"'Cinzel',serif", fontSize:11, letterSpacing:3,
-            color: page==="admin" ? T.gold : T.muted, transition:"color .3s",
-          }}>ADMIN</button>
-        )}
       </div>
 
-      {/* Right actions */}
-      <div style={{ display:"flex", alignItems:"center", gap:20 }}>
-        {/* Cart */}
+      {/* ── Right Actions ── */}
+      <div style={{ display:"flex", alignItems:"center", gap:24, flexShrink:0 }}>
+
+        {/* Cart icon */}
         <button onClick={() => setPage("cart")} style={{
-          background:"none", border:"none", cursor:"pointer", position:"relative", color:T.cream,
+          background:"none", border:"none", cursor:"pointer",
+          position:"relative", display:"flex", alignItems:"center",
         }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={page==="cart"?T.gold:T.muted} strokeWidth="1.5">
-            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke={page==="cart" ? T.gold : T.greige} strokeWidth="1.6">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
             <path d="M16 10a4 4 0 01-8 0"/>
           </svg>
           {cartCount > 0 && (
             <span style={{
-              position:"absolute", top:-6, right:-6,
-              background:T.gold, color:T.dark,
-              borderRadius:"50%", width:18, height:18,
-              fontSize:10, fontWeight:700,
+              position:"absolute", top:-5, right:-7,
+              background:`linear-gradient(135deg,${T.goldDark},${T.gold})`,
+              color:T.dark, borderRadius:"50%",
+              width:16, height:16, fontSize:9, fontWeight:800,
               display:"flex", alignItems:"center", justifyContent:"center",
               fontFamily:"'Cinzel',serif",
             }}>{cartCount}</span>
@@ -277,14 +317,33 @@ function Navbar({ page, setPage, cartCount, isAdmin, setIsAdmin, user, setUser }
 
         {/* Auth */}
         {user ? (
-          <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-            <span style={{ fontSize:12, color:T.gold, fontFamily:"'Cormorant Garamond',serif", fontStyle:"italic" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+            <span style={{
+              fontFamily:"'Cormorant Garamond',serif",
+              fontStyle:"italic", fontSize:14,
+              color:T.gold,
+            }}>
               {isAdmin ? "Admin" : user.name.split(" ")[0]}
             </span>
-            <button onClick={() => { setUser(null); setIsAdmin(false); setPage("home"); }} className="btn-outline" style={{ padding:"6px 16px", fontSize:10 }}>LOGOUT</button>
+            <button
+              onClick={() => { setUser(null); setIsAdmin(false); setPage("home"); }}
+              style={{
+                background:"none",
+                border:`1px solid ${T.gold}50`,
+                color:T.gold,
+                padding:"5px 14px",
+                fontFamily:"'Cinzel',serif",
+                fontSize:9, letterSpacing:"0.2em",
+                cursor:"pointer", transition:"all .25s",
+              }}
+            >LOGOUT</button>
           </div>
         ) : (
-          <button onClick={() => setPage("login")} className="btn-gold" style={{ padding:"8px 20px", fontSize:11 }}>SIGN IN</button>
+          <button
+            onClick={() => setPage("login")}
+            className="btn-gold"
+            style={{ padding:"8px 22px", fontSize:10, letterSpacing:"0.2em" }}
+          >SIGN IN</button>
         )}
       </div>
     </nav>
